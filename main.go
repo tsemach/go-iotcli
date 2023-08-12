@@ -1,6 +1,10 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/tsemach/go-iotcli/config"
+
 	"github.com/tsemach/go-iotcli/cmd"
 	"github.com/tsemach/go-iotcli/cmd/health"
 	"github.com/tsemach/go-iotcli/cmd/unit"
@@ -11,6 +15,9 @@ import (
 )
 
 func main() {
+	config.BuildConfig()
+	fmt.Printf("\ncfg %+s\n", config.GetEnvDomain("dev"))
+
 	health.Init()
 	unit.Init()
 	create.Init()

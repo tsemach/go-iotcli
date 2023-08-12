@@ -1,0 +1,4 @@
+environments:
+  dev: "https://localhost:8080"
+  qa: "qa.localhost"
+
