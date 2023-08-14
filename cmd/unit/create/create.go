@@ -1,10 +1,10 @@
 package create
 
 import (
-	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -35,7 +35,6 @@ var createCmd = &cobra.Command{
 		fmt.Println("create called")
 		env := common.GetEnv(cmd.Env)
 
-		fmt.Println("ENV:", env)
 		rootCAs := common.GetRootCAs("/home/tsemach/projects/go-restapi/certs/ca.crt")
 		tr := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: rootCAs, ServerName: "localhost"},
@@ -45,13 +44,21 @@ var createCmd = &cobra.Command{
 			Pid: "abc",
 			Tid: "xyz",
 		}
-		postBody, _ := json.Marshal(body)
-		responseBody := bytes.NewBuffer(postBody)
+		// var body createStrucRequestType
+		// body.Pid = "abc"
+		// body.Tid = "xyz"
 
+		fmt.Println("BODY:", body.Pid)
+		// // m := map[string]string{"pid": "abc", "tid": "xyz"}
+		r, w := io.Pipe()
+		go func() {
+			json.NewEncoder(w).Encode(body)
+			w.Close()
+		}()
+
+		fmt.Println("URL:", fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/create"))
 		client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
-		fmt.Println("URL:" + fmt.Sprintf("%s/%s", config.GetEnvDomain(env), "/api/v1/create"))
-		resp, err := client.Post(fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/create"), "application/json", responseBody)
-		// resp, err := client.Post("https://localhost:8080/api/v1/create", "application/json", responseBody)
+		resp, err := client.Post(fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/create"), "application/json", r)
 
 		// var jsonData = []byte(`{
 		// 	"pid": "abc",
