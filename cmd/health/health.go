@@ -17,6 +17,7 @@ import (
 type healthStruct struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
+	Route   string `json:"route"`
 }
 
 var healthCmd = &cobra.Command{
@@ -42,7 +43,7 @@ var healthCmd = &cobra.Command{
 		}
 
 		client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
-		resp, err := client.Get(fmt.Sprintf("%s/%s", config.GetEnvDomain(env), "/api"))
+		resp, err := client.Get(fmt.Sprintf("%s/%s", config.GetEnvDomain(env), "/health"))
 
 		if err != nil {
 			panic(err)
