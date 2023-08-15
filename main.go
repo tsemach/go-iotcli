@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/tsemach/go-iotcli/config"
 
+	"github.com/fatih/color"
 	"github.com/tsemach/go-iotcli/cmd"
 	"github.com/tsemach/go-iotcli/cmd/health"
 	"github.com/tsemach/go-iotcli/cmd/unit"
@@ -16,7 +15,7 @@ import (
 
 func main() {
 	config.BuildConfig()
-	fmt.Printf("\ncfg %+s\n", config.GetEnvDomain("dev"))
+	color.Yellow("using url: " + config.GetEnvDomain("dev"))
 
 	health.Init()
 	unit.Init()

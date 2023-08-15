@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/fatih/color"
@@ -27,78 +28,62 @@ type createStructResponseType struct {
 	Route   string `json:"route"`
 }
 
+var body createStrucRequestType
+
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create a unit if not already exist",
 	Long:  `create is part of the live cycle`,
 	Run: func(_cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
 		env := common.GetEnv(cmd.Env)
 
-		rootCAs := common.GetRootCAs("/home/tsemach/projects/go-restapi/certs/ca.crt")
+		// isok, err := validate(&body)
+		// if !isok {
+		// 	fmt.Println("error on parsing:", err)
+		// 	return
+		// }
+
+		rootCAs := common.GetRootCAs(config.GetCAPath(env))
 		tr := &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: rootCAs, ServerName: "localhost"},
 		}
 
-		body := &createStrucRequestType{
-			Pid: "abc",
-			Tid: "xyz",
-		}
-		// var body createStrucRequestType
-		// body.Pid = "abc"
-		// body.Tid = "xyz"
-
-		fmt.Println("BODY:", body.Pid)
-		// // m := map[string]string{"pid": "abc", "tid": "xyz"}
 		r, w := io.Pipe()
 		go func() {
 			json.NewEncoder(w).Encode(body)
 			w.Close()
 		}()
 
-		fmt.Println("URL:", fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/create"))
 		client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
 		resp, err := client.Post(fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/create"), "application/json", r)
-
-		// var jsonData = []byte(`{
-		// 	"pid": "abc",
-		// 	"tid": "xyz"
-		// }`)
-		// request, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", config.GetEnvDomain(env), "/api/v1/create"), bytes.NewBuffer(jsonData))
-		// request.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-		// client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
-		// resp, err := client.Do(request)
 
 		if err != nil {
 			panic(err)
 		}
 		defer resp.Body.Close()
 
-		fmt.Println("response Status:", resp.Status)
-		fmt.Println("response Headers:", resp.Header)
+		var cr createStructResponseType
+		err = json.NewDecoder(resp.Body).Decode(&cr)
 
-		var health createStructResponseType
-
-		err = json.NewDecoder(resp.Body).Decode(&health)
-
-		fmt.Println("create:", health)
-		fmt.Println("create.status:", health.Status)
-		fmt.Println("create.message:", health.Message)
-		color.Cyan("Prints text in cyan.")
+		color.Cyan("status: " + strconv.Itoa(resp.StatusCode) + " " + cr.Status + "\nresponse: " + cr.Message)
 	},
 }
 
 func Init() {
 	unit.UnitCmd.AddCommand(createCmd)
 
-	// Here you will define your flags and configuration settings.
+	createCmd.Flags().StringVarP(&body.Pid, "pid", "p", "", "unit product identifier")
+	createCmd.Flags().StringVarP(&body.Tid, "tid", "t", "", "unit tls_guid")
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// createCmd.PersistentFlags().String("foo", "", "A help for foo")
+func validate(body *createStrucRequestType) (bool, error) {
+	if len(body.Pid) < 15 {
+		return false, fmt.Errorf("pid is less then 15")
+	}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	if len(body.Pid) < 36 {
+		return false, fmt.Errorf("tid is less then 15")
+	}
+
+	return true, nil
 }

@@ -15,6 +15,12 @@ type Config struct {
 		Dev string `envconfig:"IOTCLI_ENV_DEV",yaml:"dev"`
 		Qa  string `envconfig:"IOTCLI_ENV_QA",yaml:"qa"`
 	} `yaml:"environments"`
+	Dev struct {
+		CAPath string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+	} `yaml:"dev"`
+	QA struct {
+		CAPath string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+	} `yaml:"qa"`
 }
 
 var cfg Config
@@ -29,6 +35,17 @@ func GetEnvDomain(env string) string {
 		return GetConfig().Envs.Dev
 	case "qa":
 		return GetConfig().Envs.Qa
+	}
+
+	return ""
+}
+
+func GetCAPath(env string) string {
+	switch env {
+	case "dev":
+		return GetConfig().Dev.CAPath
+	case "qa":
+		return GetConfig().QA.CAPath
 	}
 
 	return ""
@@ -62,5 +79,4 @@ func readEnv(cfg *Config) {
 func BuildConfig() {
 	readFile(&cfg)
 	readEnv(&cfg)
-	fmt.Printf("%+v", cfg)
 }

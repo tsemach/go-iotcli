@@ -2,3 +2,7 @@ environments:
   dev: "https://localhost:8080"
   qa: "qa.localhost"
 
+dev:
+  capath: /home/tsemach/projects/go-restapi/certs/ca.crt
+qa:
+  capath: /home/tsemach/projects/go-restapi/certs/ca.crt
