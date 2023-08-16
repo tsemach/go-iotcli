@@ -1,0 +1,2 @@
+go run main.go health --env dev
+go run main.go unit create --env dev --pid aaa --tid xyz

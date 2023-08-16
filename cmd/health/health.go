@@ -38,8 +38,15 @@ var healthCmd = &cobra.Command{
 		fmt.Printf("\n[health] cfg %+s\n", fmt.Sprintf("%s/%s", config.GetEnvDomain(env), "/api"))
 
 		rootCAs := common.GetRootCAs("/home/tsemach/projects/go-restapi/certs/ca.crt")
+		cert, err := common.GetClientPair(env)
+
 		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: rootCAs, ServerName: "localhost"},
+			TLSClientConfig: &tls.Config{
+				ServerName:         "localhost",
+				InsecureSkipVerify: true,
+				Certificates:       []tls.Certificate{*cert},
+				RootCAs:            rootCAs,
+			},
 		}
 
 		client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
