@@ -3,6 +3,8 @@ environments:
   qa: "qa.localhost"
 
 dev:
-  capath: /home/tsemach/projects/go-restapi/certs/ca.crt
+  capath: /home/tsemach/projects/go-iotcli/certs/ca.crt
+  clientkey: /home/tsemach/projects/go-iotcli/certs/client.key
+  clientcrt: /home/tsemach/projects/go-iotcli/certs/client.crt
 qa:
-  capath: /home/tsemach/projects/go-restapi/certs/ca.crt
+  capath: /home/tsemach/projects/go-iotcli/certs/ca.crt

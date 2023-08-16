@@ -1,9 +1,12 @@
 package common
 
 import (
+	"crypto/tls"
 	"crypto/x509"
 	"log"
 	"os"
+
+	"github.com/tsemach/go-iotcli/config"
 )
 
 func GetEnv(env string) string {
@@ -45,4 +48,15 @@ func GetRootCAs(cacertPath string) *x509.CertPool {
 	}
 
 	return rootCAs
+}
+
+func GetClientPair(env string) (*tls.Certificate, error) {
+	clientCrtPath, clientKeyPath := config.GetClientCert(env)
+
+	cert, err := tls.LoadX509KeyPair(clientCrtPath, clientKeyPath)
+	if err != nil {
+		log.Fatalf("Error opening cert file %s and key %s, Error: %s", clientCrtPath, clientKeyPath, err)
+	}
+
+	return &cert, err
 }

@@ -10,7 +10,7 @@
       "request": "launch",
       "mode": "auto",
       "program": "main.go",
-      "args": ""
+      "args": "unit create --env dev --pid aaa --tid xyz"
     }
   ]
 }

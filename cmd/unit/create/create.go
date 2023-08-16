@@ -1,5 +1,7 @@
 package create
 
+// client certificate inspire by: https://github.com/youngkin/gohttps/blob/master/client/client.go
+
 import (
 	"crypto/tls"
 	"encoding/json"
@@ -44,8 +46,15 @@ var createCmd = &cobra.Command{
 		// }
 
 		rootCAs := common.GetRootCAs(config.GetCAPath(env))
+		cert, err := common.GetClientPair(env)
+
 		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true, RootCAs: rootCAs, ServerName: "localhost"},
+			TLSClientConfig: &tls.Config{
+				ServerName:         "localhost",
+				InsecureSkipVerify: true,
+				Certificates:       []tls.Certificate{*cert},
+				RootCAs:            rootCAs,
+			},
 		}
 
 		r, w := io.Pipe()

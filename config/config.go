@@ -16,10 +16,14 @@ type Config struct {
 		Qa  string `envconfig:"IOTCLI_ENV_QA",yaml:"qa"`
 	} `yaml:"environments"`
 	Dev struct {
-		CAPath string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
+		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
 	} `yaml:"dev"`
 	QA struct {
-		CAPath string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
+		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
 	} `yaml:"qa"`
 }
 
@@ -49,6 +53,17 @@ func GetCAPath(env string) string {
 	}
 
 	return ""
+}
+
+func GetClientCert(env string) (string, string) {
+	switch env {
+	case "dev":
+		return GetConfig().Dev.ClientCrt, GetConfig().Dev.ClientKey
+	case "qa":
+		return GetConfig().QA.ClientCrt, GetConfig().QA.ClientKey
+	}
+
+	return "", ""
 }
 
 func processError(err error) {
