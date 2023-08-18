@@ -19,11 +19,15 @@ type Config struct {
 		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
 		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
 		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
+		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"dev"`
 	QA struct {
 		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
 		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
 		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
+		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"qa"`
 }
 
@@ -64,6 +68,36 @@ func GetClientCert(env string) (string, string) {
 	}
 
 	return "", ""
+}
+
+func GetPid(env string, pid string) string {
+	if pid != "" {
+		return pid
+	}
+
+	switch env {
+	case "dev":
+		return GetConfig().Dev.Pid
+	case "qa":
+		return GetConfig().QA.Pid
+	}
+
+	return ""
+}
+
+func GetTid(env string, tid string) string {
+	if tid != "" {
+		return tid
+	}
+
+	switch env {
+	case "dev":
+		return GetConfig().Dev.Tid
+	case "qa":
+		return GetConfig().QA.Tid
+	}
+
+	return ""
 }
 
 func processError(err error) {

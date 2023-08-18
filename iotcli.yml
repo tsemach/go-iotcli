@@ -6,5 +6,7 @@ dev:
   capath: /home/tsemach/projects/go-iotcli/certs/ca.crt
   clientkey: /home/tsemach/projects/go-iotcli/certs/client.key
   clientcrt: /home/tsemach/projects/go-iotcli/certs/client.crt
+  pid: "PPPPPPPPPPPPPPPP"
+  tid: TTTTTTTT-TTTT-TTTT-TTTT-TTTTTTTTTTTT
 qa:
   capath: /home/tsemach/projects/go-iotcli/certs/ca.crt

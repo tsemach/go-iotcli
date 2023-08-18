@@ -1,10 +1,16 @@
 package common
 
 import (
+	"bytes"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/tsemach/go-iotcli/config"
 )
@@ -59,4 +65,45 @@ func GetClientPair(env string) (*tls.Certificate, error) {
 	}
 
 	return &cert, err
+}
+
+func GetClient(env string) *http.Client {
+	rootCAs := GetRootCAs(config.GetCAPath(env))
+	cert, err := GetClientPair(env)
+
+	if err != nil {
+		log.Fatalf("error on getClient, err: %s", err)
+	}
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			ServerName:         "localhost",
+			InsecureSkipVerify: true,
+			Certificates:       []tls.Certificate{*cert},
+			RootCAs:            rootCAs,
+		},
+	}
+
+	client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
+
+	return client
+}
+
+func JsonPrettyEncode(data interface{}, out io.Writer) error {
+	enc := json.NewEncoder(out)
+	enc.SetIndent("", "    ")
+	if err := enc.Encode(data); err != nil {
+		return err
+	}
+	return nil
+}
+
+func JsonPrettyPrint(j any) {
+	var buffer bytes.Buffer
+
+	err := JsonPrettyEncode(j, &buffer)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(buffer.String())
 }
