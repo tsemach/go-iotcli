@@ -57,7 +57,7 @@ func GetRootCAs(cacertPath string) *x509.CertPool {
 }
 
 func GetClientPair(env string) (*tls.Certificate, error) {
-	clientCrtPath, clientKeyPath := config.GetClientCert(env)
+	clientCrtPath, clientKeyPath := config.GetAdminCert(env)
 
 	cert, err := tls.LoadX509KeyPair(clientCrtPath, clientKeyPath)
 	if err != nil {

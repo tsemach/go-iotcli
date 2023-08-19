@@ -16,32 +16,40 @@ type Config struct {
 		Qa  string `envconfig:"IOTCLI_ENV_QA",yaml:"qa"`
 	} `yaml:"environments"`
 	Dev struct {
-		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
-		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
-		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
-		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
-		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
+		CAPath   string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		AdminKey string `envconfig:"IOTCLI_ADMIN_KEY",yaml:"adminkey"`
+		AdminCrt string `envconfig:"IOTCLI_ADMIN_CRT",yaml:"admincrt"`
+		CarKey   string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"carkey"`
+		CarCrt   string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"carcrt"`
+		Pid      string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid      string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"dev"`
 	QA struct {
-		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
-		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
-		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
-		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
-		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
+		CAPath   string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		AdminKey string `envconfig:"IOTCLI_ADMIN_KEY",yaml:"adminkey"`
+		AdminCrt string `envconfig:"IOTCLI_ADMIN_CRT",yaml:"admincrt"`
+		CarKey   string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"carkey"`
+		CarCrt   string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"carcrt"`
+		Pid      string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid      string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"qa"`
 	Stage struct {
-		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
-		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
-		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
-		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
-		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
+		CAPath   string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		AdminKey string `envconfig:"IOTCLI_ADMIN_KEY",yaml:"adminkey"`
+		AdminCrt string `envconfig:"IOTCLI_ADMIN_CRT",yaml:"admincrt"`
+		CarKey   string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"carkey"`
+		CarCrt   string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"carcrt"`
+		Pid      string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid      string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"stage"`
 	Prod struct {
-		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
-		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
-		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
-		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
-		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
+		CAPath   string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		AdminKey string `envconfig:"IOTCLI_ADMIN_KEY",yaml:"adminkey"`
+		AdminCrt string `envconfig:"IOTCLI_ADMIN_CRT",yaml:"admincrt"`
+		CarKey   string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"carkey"`
+		CarCrt   string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"carcrt"`
+		Pid      string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid      string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"prod"`
 }
 
@@ -73,12 +81,16 @@ func GetCAPath(env string) string {
 	return ""
 }
 
-func GetClientCert(env string) (string, string) {
+func GetAdminCert(env string) (string, string) {
 	switch env {
 	case "dev":
-		return GetConfig().Dev.ClientCrt, GetConfig().Dev.ClientKey
+		return GetConfig().Dev.AdminCrt, GetConfig().Dev.AdminKey
 	case "qa":
-		return GetConfig().QA.ClientCrt, GetConfig().QA.ClientKey
+		return GetConfig().QA.AdminCrt, GetConfig().QA.AdminKey
+	case "stage":
+		return GetConfig().Stage.AdminCrt, GetConfig().Stage.AdminKey
+	case "prod":
+		return GetConfig().Prod.AdminCrt, GetConfig().Prod.AdminKey
 	}
 
 	return "", ""

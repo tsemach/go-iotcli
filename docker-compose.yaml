@@ -1,0 +1,9 @@
+version: '3.0'
+services:
+  nginx:
+    container_name: nginx    
+    image: nginx          
+    ports:
+      - 8081:80
+    volumes:      
+      - ./nginx:/usr/share/nginx/html/iot
