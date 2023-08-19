@@ -12,8 +12,10 @@ import (
 
 type Config struct {
 	Envs struct {
-		Dev string `envconfig:"IOTCLI_ENV_DEV",yaml:"dev"`
-		Qa  string `envconfig:"IOTCLI_ENV_QA",yaml:"qa"`
+		Dev   string `envconfig:"IOTCLI_ENV_DEV",yaml:"dev"`
+		QA    string `envconfig:"IOTCLI_ENV_QA",yaml:"qa"`
+		Stage string `envconfig:"IOTCLI_ENV_QA",yaml:"stage"`
+		Prod  string `envconfig:"IOTCLI_ENV_QA",yaml:"prod"`
 	} `yaml:"environments"`
 	Dev struct {
 		CAPath   string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
@@ -64,7 +66,7 @@ func GetEnvDomain(env string) string {
 	case "dev":
 		return GetConfig().Envs.Dev
 	case "qa":
-		return GetConfig().Envs.Qa
+		return GetConfig().Envs.QA
 	}
 
 	return ""

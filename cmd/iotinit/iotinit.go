@@ -66,6 +66,11 @@ func writeConfig() {
 	var i int
 	var cfgPath = iotDir + "/config.yaml"
 
+	cfg.Envs.Dev = "https://localhost:8080"
+	cfg.Envs.QA = "https://localhost:8080"
+	cfg.Envs.Stage = "https://localhost:8080"
+	cfg.Envs.Prod = "https://localhost:8080"
+
 	cfg.Dev.CAPath = iotDir + "/certs/dev/ca.crt"
 	cfg.Dev.AdminCrt = iotDir + "/certs/dev/admin.crt"
 	cfg.Dev.AdminKey = iotDir + "/certs/dev/admin.key"
