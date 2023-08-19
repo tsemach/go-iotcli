@@ -6,6 +6,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/tsemach/go-iotcli/cmd"
 	"github.com/tsemach/go-iotcli/cmd/health"
+	"github.com/tsemach/go-iotcli/cmd/iotinit"
 	"github.com/tsemach/go-iotcli/cmd/unit"
 	"github.com/tsemach/go-iotcli/cmd/unit/assign"
 	"github.com/tsemach/go-iotcli/cmd/unit/create"
@@ -17,6 +18,7 @@ func main() {
 	config.BuildConfig()
 	color.Yellow("using url: " + config.GetEnvDomain("dev"))
 
+	iotinit.Init()
 	health.Init()
 	unit.Init()
 	create.Init()

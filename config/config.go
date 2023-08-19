@@ -29,6 +29,20 @@ type Config struct {
 		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
 		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
 	} `yaml:"qa"`
+	Stage struct {
+		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
+		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
+		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
+	} `yaml:"stage"`
+	Prod struct {
+		CAPath    string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`
+		ClientKey string `envconfig:"IOTCLI_CLIENT_KEY",yaml:"clientkey"`
+		ClientCrt string `envconfig:"IOTCLI_CLIENT_CRT",yaml:"clientcrt"`
+		Pid       string `envconfig:"IOTCLI_PID",yaml:"pid"`
+		Tid       string `envconfig:"IOTCLI_TID",yaml:"tid"`
+	} `yaml:"prod"`
 }
 
 var cfg Config
