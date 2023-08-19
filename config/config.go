@@ -14,8 +14,8 @@ type Config struct {
 	Envs struct {
 		Dev   string `envconfig:"IOTCLI_ENV_DEV",yaml:"dev"`
 		QA    string `envconfig:"IOTCLI_ENV_QA",yaml:"qa"`
-		Stage string `envconfig:"IOTCLI_ENV_QA",yaml:"stage"`
-		Prod  string `envconfig:"IOTCLI_ENV_QA",yaml:"prod"`
+		Stage string `envconfig:"IOTCLI_ENV_STAGE",yaml:"stage"`
+		Prod  string `envconfig:"IOTCLI_ENV_PROD",yaml:"prod"`
 	} `yaml:"environments"`
 	Dev struct {
 		CAPath   string `envconfig:"IOTCLI_CAPATH",yaml:"capath"`

@@ -1,12 +1,37 @@
 environments:
-  dev: "https://localhost:8080"
-  qa: "qa.localhost"
-
+  dev: https://localhost:8080
+  qa: https://localhost:8080
+  stage: https://localhost:8080
+  prod: https://localhost:8080
 dev:
-  capath: /home/tsemach/projects/go-iotcli/certs/ca.crt
-  clientkey: /home/tsemach/projects/go-iotcli/certs/client.key
-  clientcrt: /home/tsemach/projects/go-iotcli/certs/client.crt
-  pid: "PPPPPPPPPPPPPPPP"
-  tid: TTTTTTTT-TTTT-TTTT-TTTT-TTTTTTTTTTTT
+  capath: /home/tsemach/.iot/certs/dev/ca.crt
+  adminkey: /home/tsemach/.iot/certs/dev/admin.key
+  admincrt: /home/tsemach/.iot/certs/dev/admin.crt
+  carkey: /home/tsemach/.iot/certs/dev/car.key
+  carcrt: /home/tsemach/.iot/certs/dev/car.crt
+  pid: ""
+  tid: ""
 qa:
-  capath: /home/tsemach/projects/go-iotcli/certs/ca.crt
+  capath: /home/tsemach/.iot/certs/qa/ca.crt
+  adminkey: /home/tsemach/.iot/certs/qa/admin.key
+  admincrt: /home/tsemach/.iot/certs/qa/admin.crt
+  carkey: /home/tsemach/.iot/certs/qa/car.key
+  carcrt: /home/tsemach/.iot/certs/qa/car.crt
+  pid: ""
+  tid: ""
+stage:
+  capath: /home/tsemach/.iot/certs/stage/ca.crt
+  adminkey: /home/tsemach/.iot/certs/stage/admin.key
+  admincrt: /home/tsemach/.iot/certs/stage/admin.crt
+  carkey: /home/tsemach/.iot/certs/stage/car.key
+  carcrt: /home/tsemach/.iot/certs/stage/car.crt
+  pid: ""
+  tid: ""
+prod:
+  capath: /home/tsemach/.iot/certs/prod/ca.crt
+  adminkey: /home/tsemach/.iot/certs/prod/admin.key
+  admincrt: /home/tsemach/.iot/certs/prod/admin.crt
+  carkey: /home/tsemach/.iot/certs/prod/car.key
+  carcrt: /home/tsemach/.iot/certs/prod/car.crt
+  pid: ""
+  tid: ""

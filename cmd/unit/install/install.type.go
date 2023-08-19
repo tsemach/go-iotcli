@@ -1,49 +1,5 @@
 package install
 
-// type SystemBodyStruct struct {
-// 	Product      string `json:"product"`
-// 	Catalog_num  string `json:"catalog_num"`
-// 	HW           string `json:"hw"`
-// 	Board_rev    string `json:"board_rev"`
-// 	Firmware     string `json:"firmware"`
-// 	Tls_subject  string `json:"tls_subject"`
-// 	Iot_base_url string `json:"iot_base_url"`
-// }
-
-// type InstallerBodyStruct struct {
-// 	company_name string
-// 	country      string
-// 	site         string
-// 	user_name    string
-// 	first_name   string
-// 	last_name    string
-// }
-
-// type VehicleBodyStruct struct {
-// 	manufacturer       string
-// 	vehicle_model      string
-// 	license_plate_type string
-// 	license_plate      string
-// 	chassis            string
-// 	fleet              string
-// }
-
-// type InstallationBodyStruct struct {
-// 	start_date      string
-// 	end_date        string
-// 	finish_status   string
-// 	location        string
-// 	ic_sw_ver       string
-// 	ic_tool_type    string
-// 	installation_id string
-// }
-
-//	type InstallBodyOrigStruct struct {
-//		system       SystemBodyStruct
-//		installer    InstallerBodyStruct
-//		vehicle      VehicleBodyStruct
-//		installation InstallationBodyStruct
-//	}
 type InstallStructResponseType struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
@@ -127,28 +83,3 @@ var bodyBytes = []byte(`{
     "installation_id": "1234"
   }
 }`)
-
-// func PrettyEncode(data interface{}, out io.Writer) error {
-// 	enc := json.NewEncoder(out)
-// 	enc.SetIndent("", "    ")
-// 	if err := enc.Encode(data); err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
-
-// func main() {
-// 	var body InstallBodyStruct
-// 	fmt.Println(bodyBytes)
-// 	err := json.Unmarshal(bodyBytes, &body)
-// 	body.Installation.End_date = "aaaaaaaaaaaaa"
-// 	fmt.Println("marshal:", err)
-// 	fmt.Println("marshal:", body)
-
-// 	var buffer bytes.Buffer
-// 	err3 := PrettyEncode(body, &buffer)
-// 	if err3 != nil {
-// 		log.Fatal(err3)
-// 	}
-// 	fmt.Println(buffer.String())
-// }
