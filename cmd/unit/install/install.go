@@ -1,9 +1,7 @@
 package install
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/fatih/color"
@@ -41,19 +39,25 @@ var installCmd = &cobra.Command{
 			return
 		}
 
-		client := common.GetClient(env)
+		// var ir InstallStructResponseType
+		// var http = common.HTTP{Path: "/api/v1/install"}
+		var http = common.NewHTTP("/api/v1/install")
 
-		postBody, _ := json.Marshal(body)
-		responseBody := bytes.NewBuffer(postBody)
-		resp, err := client.Post(fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/install"), "application/json", responseBody)
+		// resp, ir := common.SendPost[InstallBodyStruct, InstallStructResponseType](env, "/api/v1/install", "application/json", &body)
+		resp, ir := common.SendPost[InstallBodyStruct, InstallStructResponseType](env, http, &body)
+		// client := common.GetClient(env)
 
-		if err != nil {
-			panic(err)
-		}
-		defer resp.Body.Close()
+		// postBody, _ := json.Marshal(body)
+		// responseBody := bytes.NewBuffer(postBody)
+		// resp, err := client.Post(fmt.Sprintf("%s%s", config.GetEnvDomain(env), "/api/v1/install"), "application/json", responseBody)
 
-		var ir installStructResponseType
-		err = json.NewDecoder(resp.Body).Decode(&ir)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// defer resp.Body.Close()
+
+		// var ir installStructResponseType
+		// err = json.NewDecoder(resp.Body).Decode(&ir)
 
 		color.Cyan("status: " + strconv.Itoa(resp.StatusCode) + " " + ir.Status + "\nresponse: " + ir.Message)
 	},

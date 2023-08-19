@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net/http"
+	// "net/http"
 	"os"
-	"time"
+	// "time"
 
 	"github.com/tsemach/go-iotcli/config"
 )
@@ -67,27 +67,46 @@ func GetClientPair(env string) (*tls.Certificate, error) {
 	return &cert, err
 }
 
-func GetClient(env string) *http.Client {
-	rootCAs := GetRootCAs(config.GetCAPath(env))
-	cert, err := GetClientPair(env)
+// func GetClient(env string) *http.Client {
+// 	rootCAs := GetRootCAs(config.GetCAPath(env))
+// 	cert, err := GetClientPair(env)
 
-	if err != nil {
-		log.Fatalf("error on getClient, err: %s", err)
-	}
+// 	if err != nil {
+// 		log.Fatalf("error on getClient, err: %s", err)
+// 	}
 
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			ServerName:         "localhost",
-			InsecureSkipVerify: true,
-			Certificates:       []tls.Certificate{*cert},
-			RootCAs:            rootCAs,
-		},
-	}
+// 	tr := &http.Transport{
+// 		TLSClientConfig: &tls.Config{
+// 			ServerName:         "localhost",
+// 			InsecureSkipVerify: true,
+// 			Certificates:       []tls.Certificate{*cert},
+// 			RootCAs:            rootCAs,
+// 		},
+// 	}
 
-	client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
+// 	client := &http.Client{Transport: tr, Timeout: 10 * time.Second}
 
-	return client
-}
+// 	return client
+// }
+
+// func SendPost[REQ any, RES any](env string, path string, body *REQ) (*http.Response, *RES) {
+
+// 	client := GetClient(env)
+
+// 	postBody, _ := json.Marshal(*body)
+// 	responseBody := bytes.NewBuffer(postBody)
+// 	resp, err := client.Post(fmt.Sprintf("%s%s", config.GetEnvDomain(env), path), "application/json", responseBody)
+
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer resp.Body.Close()
+
+// 	var ir RES
+// 	err = json.NewDecoder(resp.Body).Decode(&ir)
+
+// 	return resp, &ir
+// }
 
 func JsonPrettyEncode(data interface{}, out io.Writer) error {
 	enc := json.NewEncoder(out)

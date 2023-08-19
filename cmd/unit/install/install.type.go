@@ -44,7 +44,7 @@ package install
 //		vehicle      VehicleBodyStruct
 //		installation InstallationBodyStruct
 //	}
-type installStructResponseType struct {
+type InstallStructResponseType struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 	Route   string `json:"route"`

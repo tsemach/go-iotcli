@@ -8,8 +8,10 @@
 4. init cobra by: `cobra-cli init`
 5. get viper package: `go get github.com/spf13/viper@v1.8.1`
 6. cobra-cli add get
+7. cobra-cli add unit
+8. cobra-cli add install -p unit
 
-7. go install: this command create an executable in $GOPATH/bin
+9. go install: this command create an executable in $GOPATH/bin
   export GOBIN=$GOPATH/bin
   export PATH=$PATH:$GOBIN
 
