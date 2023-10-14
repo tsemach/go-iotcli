@@ -49,3 +49,9 @@ func (u *UnitStructType) Zero() {
 	u.Pid = ZeroPid()
 	u.Tid = ZeroTid()
 }
+
+// func Println(a ...any) (n int, err error) {
+// 	fmt.Println(a)
+
+// 	return n, err
+// }
