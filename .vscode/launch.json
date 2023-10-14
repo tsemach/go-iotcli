@@ -18,7 +18,7 @@
       "request": "launch",
       "mode": "auto",
       "program": "main.go",
-      "args": "config get --key dev.capath"
+      "args": "config get --key environments.dev"
     }
   ]
 }
