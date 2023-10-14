@@ -1,5 +1,5 @@
 environments:
-  dev: https://localhost:8080
+  dev: https://dev:8080
   qa: https://localhost:8080
   stage: https://localhost:8080
   prod: https://localhost:8080

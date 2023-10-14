@@ -32,6 +32,30 @@ func getTag(tag string, group string) string {
 	return ""
 }
 
+func findFieldByTag1(t reflect.Type, group string, tag string) (*reflect.StructField, error) {
+	fmt.Println("Type is", t.Name(), "and kind is", t.Kind())
+
+	if t.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("kind of %s is not struct, unable to find tag:%s:%s", t.Name(), group, tag)
+	}
+
+	for i := 0; i < t.NumField(); i++ {
+		f := t.Field(i)
+
+		fmt.Println("Field tag name is", f.Tag.Get(group), "and kind is", t.Kind())
+		fmt.Println("Field", i+1, "name is", f.Name, "type is", f.Type.Name(), "and kind is", f.Type.Kind())
+
+		fmt.Println("Field tag name is:", getTag(string(f.Tag), group), "and kind is", t.Kind())
+
+		if getTag(string(f.Tag), group) == tag {
+			fmt.Println("found tag field name is", f.Name, "and kind is", f.Type.Kind())
+			return &f, nil
+		}
+	}
+
+	return nil, fmt.Errorf("unable to find tag:%s:%s", group, tag)
+}
+
 func findFieldByTag(t reflect.Type, group string, tag string) (*reflect.StructField, error) {
 	fmt.Println("Type is", t.Name(), "and kind is", t.Kind())
 
@@ -56,14 +80,78 @@ func findFieldByTag(t reflect.Type, group string, tag string) (*reflect.StructFi
 	return nil, fmt.Errorf("unable to find tag:%s:%s", group, tag)
 }
 
-func examiner(t reflect.Type, path []string, group string) (string, error) {
+func examiner(v reflect.Value, path []string, group string) (string, error) {
+	t := v.Type()
+	fmt.Println("[examiner] called with type:", t.Name(), ", kind is", t.Kind(), "indicator:", path)
+	if t.Kind() != reflect.Struct {
+		fmt.Println("[examiner] value is:", v.Elem())
+	}
+
+	switch t.Kind() {
+	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
+		fmt.Println("found one of reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice")
+		return examiner(v.Elem(), path, group)
+	case reflect.Struct:
+		for i := 0; i < v.NumField(); i++ {
+			f := v.Field(i)
+			// tag := getTag(string(v.Type().Field(i).Tag), group)
+
+			fmt.Println("[examiner] found value:", f)
+			fmt.Println("[examiner] f.Type(), f.Type().Name():", f.Type(), f.Type().Name())
+			fmt.Println("[examiner] f.Type().Name():", v.Type().Field(i).Tag)
+			fmt.Println("[examiner] found tag", getTag(string(v.Type().Field(i).Tag), group))
+
+			if getTag(string(v.Type().Field(i).Tag), group) == path[0] {
+				fmt.Println("[examiner] found tag:", getTag(string(v.Type().Field(i).Tag), group))
+
+				if len(path) == 1 {
+					fmt.Println("founf value:", f.String())
+					return f.String(), nil
+				}
+				return examiner(f, path[1:], group)
+			}
+		}
+		// 	if len(path) == 1 {
+		// 		f, err := findFieldByTag(t, "yaml", path[0])
+		// 		if err != nil {
+		// 			fmt.Println("[examiner] failed to look for field with tag:", path[0])
+		// 		}
+
+		// 		fmt.Println("[examiner] found tag", getTag(string(f.Tag), group))
+		// 		fmt.Println("[examiner] found tag", reflect.ValueOf(f))
+		// 		fmt.Println("[examiner] found tag", f.Type.Elem().String())
+
+		// 		// return getTag(string(f.Tag), group), err
+		// 		return getTag(string(f.Tag), group), err
+		// 	}
+
+		// 	for i := 0; i < t.NumField(); i++ {
+		// 		f := t.Field(i)
+
+		// 		fmt.Println("[examiner] found tag", f.Tag.Get(group))
+
+		// 		if f.Tag != "" && f.Tag.Get(group) == path[0] {
+		// 			fmt.Println("[examiner] found tag", f.Tag)
+		// 			return examinerGetScan(f.Type, path[1:], group)
+		// 		}
+		// 	}
+
+		// 	fmt.Println(fmt.Sprintf("unable to find %s:%s tag ", group, path[0]))
+		// 	return "", fmt.Errorf("unable to find %s:%s tag in struct: %s", group, path[0], t.Name())
+		// }
+	}
+
+	return "", nil
+}
+
+func examinerGetScan1(t reflect.Type, path []string, group string) (string, error) {
 	fmt.Println("[examiner] called with type:", t.Name(), ", kind is", t.Kind(), "indicator:", path)
 	// indicators := strings.Split(indicator, ".")
 
 	switch t.Kind() {
 	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
 		fmt.Println("found one of reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice")
-		return examiner(t.Elem(), path, group)
+		return examinerGetScan(t.Elem(), path, group)
 	case reflect.Struct:
 		if len(path) == 1 {
 			f, err := findFieldByTag(t, "yaml", path[0])
@@ -86,7 +174,48 @@ func examiner(t reflect.Type, path []string, group string) (string, error) {
 
 			if f.Tag != "" && f.Tag.Get(group) == path[0] {
 				fmt.Println("[examiner] found tag", f.Tag)
-				return examiner(f.Type, path[1:], group)
+				return examinerGetScan(f.Type, path[1:], group)
+			}
+		}
+
+		fmt.Println(fmt.Sprintf("unable to find %s:%s tag ", group, path[0]))
+		return "", fmt.Errorf("unable to find %s:%s tag in struct: %s", group, path[0], t.Name())
+	}
+
+	return "", fmt.Errorf("end of examinet, unable to find %s:%s tag ", group, path[0])
+}
+
+func examinerGetScan(t reflect.Type, path []string, group string) (string, error) {
+	fmt.Println("[examiner] called with type:", t.Name(), ", kind is", t.Kind(), "indicator:", path)
+	// indicators := strings.Split(indicator, ".")
+
+	switch t.Kind() {
+	case reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice:
+		fmt.Println("found one of reflect.Array, reflect.Chan, reflect.Map, reflect.Ptr, reflect.Slice")
+		return examinerGetScan(t.Elem(), path, group)
+	case reflect.Struct:
+		if len(path) == 1 {
+			f, err := findFieldByTag(t, "yaml", path[0])
+			if err != nil {
+				fmt.Println("[examiner] failed to look for field with tag:", path[0])
+			}
+
+			fmt.Println("[examiner] found tag", getTag(string(f.Tag), group))
+			fmt.Println("[examiner] found tag", reflect.ValueOf(f))
+			fmt.Println("[examiner] found tag", f.Type.Elem().String())
+
+			// return getTag(string(f.Tag), group), err
+			return getTag(string(f.Tag), group), err
+		}
+
+		for i := 0; i < t.NumField(); i++ {
+			f := t.Field(i)
+
+			fmt.Println("[examiner] found tag", f.Tag.Get(group))
+
+			if f.Tag != "" && f.Tag.Get(group) == path[0] {
+				fmt.Println("[examiner] found tag", f.Tag)
+				return examinerGetScan(f.Type, path[1:], group)
 			}
 		}
 
@@ -142,7 +271,9 @@ var getCmd = &cobra.Command{
 	Run: func(_cmd *cobra.Command, args []string) {
 		fmt.Println("get called")
 		// examinerOrig(reflect.TypeOf(config.GetConfig()), 0)
-		value, err := examiner(reflect.TypeOf(config.GetConfig()), strings.Split(key, "."), "yaml")
+
+		// value, err := examinerGetScan(reflect.TypeOf(config.GetConfig()), strings.Split(key, "."), "yaml")
+		value, err := examiner(reflect.ValueOf(config.GetConfig()), strings.Split(key, "."), "yaml")
 		if err != nil {
 			fmt.Println("unable to examine key:", key)
 
